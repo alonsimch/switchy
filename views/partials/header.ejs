@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+        Switchy
+        </title> 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="/css/main.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+        <script
+		  src="https://code.jquery.com/jquery-3.1.1.min.js"
+		  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+		  crossorigin="anonymous"></script>
+    </head>
+    <body>
+        
+         
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/items/index">Switchy</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <% if(!currentUser){%>
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/register">Register</a></li>
+                    <% }else{%>
+                    <li><a><%= currentUser.coins%><i class="fab fa-connectdevelop fa-md"></i></a></li>
+                    <li><a href="/user/<%=currentUser.id%>">Signed In As <strong><%= currentUser.username%></strong></a></li>
+                    <li><a href="/logout">Logout</a></li>
+                    <% };%>
+                </ul>
+            </div>
+        </div>
+    </nav>  
+        
+        <div class="container">
+            <% if(error && error.length>0){%>
+                <div class="alert alert-danger" role="alert"><%= error%></div>
+            <% }%>
+            <% if(success && success.length>0){%>
+                <div class="alert alert-success" role="alert"><%= success%></div>
+            <% }%>
+        </div>

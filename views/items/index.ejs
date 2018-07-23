@@ -1,0 +1,108 @@
+<% include ../partials/header%>
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+<div class="container">
+<header class="jumbotron">
+    <div class="container">
+        <h1>Item index page</h1>
+        <p>View items from our community</p>
+        <p>
+            <a class="btn btn-primary btn-lg" href="/items/new">Add a New Item</a>
+        </p>
+        <p>
+            <form action="/items/index" method="GET" class="form-inline">
+                <div class="form-group">
+                    <input type="text" name="search" id="search" placeholder="Search item name..." class="form-control">
+                    <input type="submit" value="Search" class="btn btn-default">
+                </div>
+            </form>
+            
+            <div>
+                    <input id="advancedFilterbt" type="submit" value="Advanced Filter" class="btn btn-default">
+            </div>
+        </p>
+    </div>
+</header>
+
+<header class="jumbotron" id="filterBox" class="hidden">
+<div class="container"  class="hidden">
+    <form action="/items/index/filter" method="GET" class="form-inline">
+        <input type="submit" value="Filter" class="btn btn-default">
+    <label for="Brand">Brand:</label>
+    <select name="filter[brand]">
+        <option selected disabled hidden>Filter Brand</option>
+        <option >-</option>
+        <option >Nike</option>
+        <option >Adidas</option>
+        <option >Other..</option>
+    </select>
+    
+    <label for="Type">Type:</label>
+    <select name="filter[type]">
+        <option selected disabled hidden>Filter Type</option>
+        <option >-</option>
+        <option >Accesory</option>
+        <option >Pants</option>
+        <option >Shirt</option>
+        <option >Shoes</option>
+    </select>
+    
+    <label for="Size">Size:</label>
+    <select name="filter[size]">
+        <option selected disabled hidden>Filter Size</option>
+        <option >-</option>
+        <option >Irrelevant</option>
+        <option >XS</option>
+        <option >S</option>
+        <option >M</option>
+        <option >L</option>
+        <option >XL</option>
+        <option >XXL</option>
+    </select>
+    </form>
+    <p></p>
+    
+</div>
+</header>
+
+        <div id="item-box" class="row text-center" style="display:flex; flex-wrap: wrap;">
+            <div class="col-md-12">
+                <% if(items.length<1){%>
+                <h3>Sorry, there are no results for this query.</h3>
+                <h3>Try something else...</h3>
+                <% }%>
+            </div>
+                <% items.forEach(function(item){%>
+                <div class="col-md-3 col-sm-6">
+                    <div class="thumbnail">
+                        <img src="<%= item.image%>">
+                        <div class="caption">
+                           <h4><%= item.name%></h4>
+                        </div> 
+                        <p>
+                            <a href="/items/<%=item.id %>" class="btn btn-primary">More info</a>
+                        </p>
+                         
+                    </div> 
+                </div>
+                <% });%>
+        </div>
+        
+        
+        
+</div>
+
+<% include ../partials/footer%>
+
+<!--"advancedFilterbt"-->
+<script>
+$("#advancedFilterbt").on("click",function(){$("#filterBox").slideToggle(500)})
+    
+</script>
+
+<!--AJAX SCRIPT-->
+<script src="/ajax.js"></script>

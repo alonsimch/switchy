@@ -1,0 +1,197 @@
+<% include ../partials/header%>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            
+            <!--=====Left side=====-->
+            <p class="lead">Switchy</p>
+            
+            <!-- Buyer Confirmation -->
+            <div class="list-group">
+                <% if(currentUser && (item.status=="droppedOff") && (item.buyer.equals(currentUser.id))){%>
+                <% var buyerConfirmVisible=""%>
+                    <% }else{%>
+                    <% var buyerConfirmVisible="hiddenForm"%>
+                    <% }%>
+                    <div id="buyerConfirm-div" class="<%=buyerConfirmVisible%>">
+                <h3>item waiting for received confirmation</h3>
+                <li class="list-group-item">
+                    <form class="" id="received-form" action="/items/<%= item._id%>/received" method="GET">
+                    <button  class=" btn-s btn-warning">Confirm pickup</button>
+                    </form>
+                    </div>
+            </div>
+            
+            <!--Seller DropOff Cancel-->
+            <div class="list-group">
+            <% if(currentUser && (item.status=="droppedOff") && (item.owner.id.equals(currentUser.id))){%>
+            <% var canceDropOffVisible=""%>
+                    <% }else{%>
+                    <% var canceDropOffVisible="hiddenForm"%>
+                    <% }%>
+                    <div id="dropOffCancel-div" class="<%=canceDropOffVisible%>">
+                <h3>Waiting for confirmation from the buyer</h3>
+                <li class="list-group-item">
+                    <form class="" id="cancelDropOff-form" action="/items/<%= item._id%>/cancelDropOff" method="GET">
+                    <button  class=" btn-s btn-danger">Cancel drop off</button>
+                    </form>
+                    </div>
+            </div>
+            
+            <!--Seller DropOff/cancel approval -->
+            <div class="list-group">
+                <% if(currentUser && (item.owner.id.equals(currentUser.id)) && (item.status=="approved")){%>
+              <% var dropOffVisible=""%>
+                    <% }else{%>
+                    <% var dropOffVisible="hiddenForm"%>
+                    <% }%>
+                 <div id="approved-div" class="<%=dropOffVisible%>">
+                         
+                  <h3>item waiting for drop-off</h3>
+                <li class="list-group-item">
+                    <form class="" id="dropOff-form" action="/items/<%= item._id%>/dropOff" method="GET">
+                    <button  class=" btn-s btn-warning">Dropped off!</button>
+                    </form>
+                    <p></p>
+                    <form class="cancelApproval-form" action="/items/<%= item._id%>/cancelApproval" method="GET">
+                    <button  class=" btn-s btn-danger">Cancel approval</button>
+                    </form>
+                    </li>
+                </div>
+            </div>
+            
+            <!--Seller approve requests-->
+            <div class="list-group">
+                <% if(currentUser && (item.owner.id.equals(currentUser.id)) && (item.status=="requested")){%>
+                  <% var requestsVisible=""%>
+                    <% }else{%>
+                    <% var requestsVisible="hiddenForm"%>
+                    <% }%>
+                <div id="requests-div" class="<%=requestsVisible%>">
+                <h3>buy requests</h3>
+                <% item.buyRequests.forEach(function(seed){%>
+                <li class="list-group-item">
+                    <h6><%= seed.username%></h6>
+                    <form class="approve-form"  action="/items/<%= item._id%>/approveRequest/<%= seed.id%>" method="GET">
+                    <button  class=" btn-s btn-warning">Approve Request</button>
+                    </form>
+                    </li>
+                <% }); %>
+                
+            </div>
+            </div>
+        </div>
+        
+        
+        <!--=====Right Side======-->
+        <div class="col-md-9">
+            <div class="thumbnail">
+                <img class="img-responsive" src="<%= item.image%>">
+                <div class="caption-full">
+                    <h2 class="pull-right">Price: <%= item.price%><i class="fab fa-connectdevelop fa-lg"></i></h2>
+                    
+                    <h4><a><%= item.name%></a></h4>
+                    
+                    
+                    
+                    <p><%= item.description%></p>
+                    
+                    
+                    <!--=====BUY FORM=====-->
+                    <% if(currentUser && !(item.owner.id.equals(currentUser.id)) && !(item.buyRequests.toString().indexOf(currentUser.id)>-1)&& (item.status=="forSale" || item.status=="requested")){%>
+                     <% var buyVisible=""%>
+                    <% }else{%>
+                    <% var buyVisible="hiddenForm"%>
+                    <% }%>
+                    <form class="pull-right <%= buyVisible%>" id="buy-form" action="/items/<%= item._id%>/buy" method="GET">
+                        <% if (currentUser && currentUser.coins>=item.price ){%>
+                        <button  class="pull-right btn-lg btn-success">BUY ITEM</button>
+                        <% }else{ %>
+                        <button  class="pull-right btn-lg btn-secondary" disabled>BUY ITEM</button>
+                        <% } %>
+                    </form>
+                   
+                   <!--=====Cancel Request/Cancel BUY FORM=====-->
+                   <% if (currentUser && item.buyRequests.toString().indexOf(currentUser.id)>-1 && item.status=="requested"){%>
+                   <% var cancelRequestVisible=""%>
+                    <% }else{%>
+                    <% var cancelRequestVisible="hiddenForm"%>
+                    <% }%>
+                    <form class="pull-right <%= cancelRequestVisible%>" id="buycancel-form" action="/items/<%= item._id%>/buyCancel" method="GET">
+                        <button  class="pull-right btn-lg btn-danger">Cancel Request</button>
+                    </form>
+                   
+                   <!--=====Cancel Purchase/Cancel Approval FORM=====-->
+                   <% if (currentUser && item.buyer && item.buyer.equals(currentUser.id) && (item.status=="approved")){%>
+                   <% var buyerCancelApprovalVisible=""%>
+                    <% }else{%>
+                    <% var buyerCancelApprovalVisible="hiddenForm"%>
+                    <% }%>
+                   <form id="buyerCancelApproval-form" class="<%= buyerCancelApprovalVisible%>" action="/items/<%= item._id%>/cancelApproval" method="GET">
+                       <p>The seller has approved your purchase!
+                       You should discuss the delivery method, and then wait for the drop off.</p>
+                    <button  class=" pull-right btn-lg btn-danger">Cancel Purchase</button>
+                    </form>
+                    
+                    
+                   <!--=====Resell Item FORM=====-->
+                    <% if(currentUser && (item.owner.id.equals(currentUser.id)) && (item.status=="sold")){%>
+                    <% var resellVisible=""%>
+                    <% }else{%>
+                    <% var resellVisible="hiddenForm"%>
+                    <% }%>
+                    <form class="pull-right <%= resellVisible%>" id="resell-form" action="/items/<%= item._id%>/resell" method="GET">
+                        <button  class="pull-right btn-lg btn-primary">Re-Sell Item</button>
+                    </form>
+                    
+                    
+                    
+                    
+                    <!--=====Item Details=====-->
+                    <p>
+                        <em>Submitted By: <%= item.owner.username%></em>
+                    </p>
+                    <% if(currentUser && item.owner.id.equals(currentUser.id)){%>
+                    <a class="btn btn-warning" href="/items/<%= item._id%>/edit">Edit</a>
+                    <form id="delete-form" action="/items/<%= item._id%>?_method=delete" method="POST">
+                        <button  class="btn btn-danger">DELETE</button>
+                    </form>
+                    <% }%>
+                </div>
+            </div>
+            <div class="well">
+                <div class="text-right">
+                    <a class="btn btn-success" href="/itemgrounds/<%= item.id%>/comments/new">Add a Comment</a>
+                </div>
+                <hr>
+                    < % item.comments.forEach(function(comment){%>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <strong>< %= comment.owner.username%></strong>
+                            <span class="pull-right">10 days ago</span>
+                            <p>
+                                < %= comment.text%>
+                            </p>
+                            < % if(currentUser && comment.owner.id.equals(currentUser.id)){%>
+                                <a class="btn btn-xs btn-warning" 
+                                href="/itemgrounds/<%= item._id%>/comments/< %=comment._id%>/edit"
+                                >Edit Comment</a>
+                                
+                                <form id="comment-delete-form" 
+                                action="/itemgrounds/<%= item._id%>/comments/< %=comment._id%>?_method=delete" 
+                                method="POST">
+                                <button  class="btn btn-xs btn-danger">DELETE</button>
+                                </form>
+                            < % }%>
+                        </div>
+                    </div>
+                    
+                    < % })%>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<!--AJAX SCRIPT-->
+<script src="/ajax-item-show.js"></script>
+<% include ../partials/footer%>

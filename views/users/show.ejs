@@ -1,0 +1,161 @@
+<% include ../partials/header%>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="col-lg-10">
+                    <div class="thumbnail">
+                       <img src="https://t3.ftcdn.net/jpg/01/18/06/32/240_F_118063283_FD6CvzN1v1LFEMupsqEfuOkPbfjuO0CU.jpg">
+                        <div class="caption">
+                           <h4><%=user.username%></h4>
+                        </div> 
+                         
+                    </div> 
+                </div>
+                
+            <p class="lead">Switchy</p>
+            <div class="list-group">
+                <li class="list-group-item list-group-item-action active btn">User</li>
+                 <li class="list-group-item list-group-item-action btn saleButton">For Sale</li>
+                  <li class="list-group-item list-group-item-action btn soldButton">Sold</li>
+                  <li class="list-group-item list-group-item-action btn boughtButton">Bought</li>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="thumbnail">
+                <img class="img-responsive" src="https://images.firstcovers.com/covers/i/its_easy_if_you_try-5332.jpg">
+                <div class="caption-full">
+                    <h4><a><%= user.username%></a></h4>
+                    <p>description</p>
+                    <p>about</p>
+                    <p>friends</p>
+                    <!--<p>-->
+                    <!--    <em>Submitted By: < %= item.owner.username%></em>-->
+                    <!--</p>-->
+                    <% if(currentUser && user._id.equals(currentUser.id)){%>
+                    <a class="btn btn-warning" href="/items/< %= item._id%>/edit">Edit</a>
+                    <!--<form id="delete-form" action="/items/< %= item._id%>?_method=delete" method="POST">-->
+                    <!--    <button  class="btn btn-danger">DELETE</button>-->
+                    <!--</form>-->
+                    <% }%>
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+    <div class="well container">
+                <div class="col-md-4 saleButton">
+                    <div class="thumbnail ">
+                    <img src="http://www.bb-talkin.eu/bbe/wp-content/uploads/2017/12/sale.jpg">
+                    </div>
+                    <button  class="col-md-12 btn btn-success">For sale</button>
+                </div>
+                <div class="col-md-4 soldButton">
+                    <div class="thumbnail ">
+                    <img src="http://i294.photobucket.com/albums/mm106/Linnear1701/40K/Sold.jpg">
+                    </div>
+                    <button  class="col-md-12 btn btn-warning">Sold</button>
+                </div>
+                <div class="col-md-4 boughtButton">
+                    <div class="thumbnail">
+                    <img src="https://pbs.twimg.com/profile_images/378800000386663723/06b8273d1eb3bc9a5b943dacf19267e1_400x400.png">
+                    </div>
+                    <button  class="col-md-12 btn btn-danger">Bought</button>
+                </div>
+                
+            </div>
+            
+            <div class="row text-center" id="user-sale-items" style="flex-wrap: wrap;">
+            <div class="col-md-12">
+                <% if(user.items.forSale.length<1){%>
+                <h3>Sorry, there are no results for this query.</h3>
+                <h3>Try something else...</h3>
+                <% }%>
+            </div>
+                <% user.items.forSale.forEach(function(item){%>
+                <div class="col-md-3 col-sm-6">
+                    <div class="thumbnail">
+                        <img src="<%= item.image%>">
+                        <div class="caption">
+                           <h4><%= item.name%></h4>
+                        </div> 
+                        <p>
+                            <a href="/items/<%=item.id %>" class="btn btn-primary">More info</a>
+                        </p>
+                         
+                    </div> 
+                </div>
+                <% });%>
+        </div>
+        <div class="row text-center" id="user-sold-items" style="flex-wrap: wrap;">
+            <div class="col-md-12">
+                <% if(user.items.forSale.length<1){%>
+                <h3>Sorry, there are no results for this query.</h3>
+                <h3>Try something else...</h3>
+                <% }%>
+            </div>
+                <% user.items.sold.forEach(function(item){%>
+                <div class="col-md-3 col-sm-6">
+                    <div class="thumbnail">
+                        <img src="<%= item.image%>">
+                        <div class="caption">
+                           <h4><%= item.name%></h4>
+                        </div> 
+                        <p>
+                            <a href="/items/<%=item.id %>" class="btn btn-primary">More info</a>
+                        </p>
+                         
+                    </div> 
+                </div>
+                <% });%>
+        </div>
+        <div class="row text-center" id="user-bought-items" style="flex-wrap: wrap;">
+            <div class="col-md-12">
+                <% if(user.items.forSale.length<1){%>
+                <h3>Sorry, there are no results for this query.</h3>
+                <h3>Try something else...</h3>
+                <% }%>
+            </div>
+                <% user.items.bought.forEach(function(item){%>
+                <div class="col-md-3 col-sm-6">
+                    <div class="thumbnail">
+                        <img src="<%= item.image%>">
+                        <div class="caption">
+                           <h4><%= item.name%></h4>
+                        </div> 
+                        <p>
+                            <a href="/items/<%=item.id %>" class="btn btn-primary">More info</a>
+                        </p>
+                         
+                    </div> 
+                </div>
+                <% });%>
+        </div>
+            
+</div>
+<script>
+// $("li").on("click",function(){})
+$("li").on("click",function(){
+    $("li").removeClass("active");
+    $(this).addClass("active");
+    
+})    
+// $(".saleButton").on("click",function(){
+//   console.log("saleButton clicked!")
+    
+// }) 
+
+$(".saleButton").on("click",function(){
+$("#user-sold-items").fadeOut(function(){$("#user-bought-items").fadeOut(function(){$("#user-sale-items").fadeIn();});});
+})
+
+$(".soldButton").on("click",function(){
+$("#user-sale-items").fadeOut(function(){$("#user-bought-items").fadeOut(function(){$("#user-sold-items").fadeIn();});});
+})
+
+$(".boughtButton").on("click",function(){
+$("#user-sold-items").fadeOut(function(){$("#user-sale-items").fadeOut(function(){$("#user-bought-items").fadeIn();});});
+})
+
+</script>
+<% include ../partials/footer%>

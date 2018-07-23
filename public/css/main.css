@@ -1,0 +1,23 @@
+/*body{background-color: purple}*/
+.thumbnail img { 
+    width: 100%
+    
+}
+
+.thumbnail {padding:1px;}
+
+.thumbnail .caption-full{padding:9px;}
+
+
+#delete-form{display: inline}
+
+#comment-delete-form{display: inline}
+
+#filterBox{display :none}
+
+li:hover{background-color: #F8F8FF}
+#user-sale-items{display:none}
+#user-sold-items{display:none}
+#user-bought-items{display:none}
+
+.hiddenForm{display :none;}
